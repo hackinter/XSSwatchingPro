@@ -2,7 +2,7 @@
 ## Warning
 
 - **Security**: Be cautious when testing websites that you do not own or have explicit permission to test. Unauthorized testing can be considered illegal and may lead to severe consequences.
-- **Payloads**: The effectiveness of the tool depends on the payloads used. Ensure that you are using relevant and updated payloads to maximize the chances of detecting vulnerabilities.
+- **Payloads**: The tool's effectiveness depends on the payloads used. Ensure that you are using relevant and updated payloads to maximize the chances of detecting vulnerabilities.
 - **Network Traffic**: Monitor your network traffic when using this tool, as some websites may flag repeated requests as malicious activity.
 - **Responsibility**: This tool is intended for educational and ethical hacking purposes only. Always adhere to ethical guidelines and legal regulations while using this software.
 ```
@@ -65,7 +65,7 @@ XSSwatchingPro is an automated tool for testing XSS (Cross-Site Scripting) vulne
 ## Example
 
 ```bash
-🔗 Enter the target domain (e.g., https://example.com): https://kali.org
+🔗 Enter the target domain (e.g., https://example.com): https://example.com
 📁 Enter the path to the payload file: /path/to/payloads.txt
 📜 Choose the HTTP method (GET/POST): GET
 ```
@@ -74,28 +74,28 @@ XSSwatchingPro is an automated tool for testing XSS (Cross-Site Scripting) vulne
 
 - **Vulnerability Found**:
   ```
-  💥 Possible XSS vulnerability found: https://kali.org?payload=<script>alert('xss')</script> with payload: <script>alert('xss')</script>
+  💥 Possible XSS vulnerability found: https://example.com?payload=<script>alert('xss')</script> with payload: <script>alert('xss')</script>
   ```
 
 - **No Vulnerability Found**:
   ```
-  ❎ No vulnerability found; URL is safe: https://kali.org?payload=<script>console.log('test')</script> with payload: <script>console.log('test')</script>
+  ❎ No vulnerability found; URL is safe: https://example.com?payload=<script>console.log('test')</script> with payload: <script>console.log('test')</script>
   ```
 
 - **Connection Error**:
   ```
-  ⚠️ Error connecting to server; URL is not accessible for testing: https://kali.org?payload=<script>alert('fail')</script>
+  ⚠️ Error connecting to server; URL is not accessible for testing: https://example.com?payload=<script>alert('fail')</script>
   ```
 
 - **Results Saved**:
   ```
-  ✅ Results saved to kali-result.txt
+  ✅ Results saved to example-com-result.txt
   ```
 
 ## Warning
 
 - **Security**: Be cautious when testing websites that you do not own or have explicit permission to test. Unauthorized testing can be considered illegal and may lead to severe consequences.
-- **Payloads**: The effectiveness of the tool depends on the payloads used. Ensure that you are using relevant and updated payloads to maximize the chances of detecting vulnerabilities.
+- **Payloads**: The tool's effectiveness depends on the payloads used. Ensure that you are using relevant and updated payloads to maximize the chances of detecting vulnerabilities.
 - **Network Traffic**: Monitor your network traffic when using this tool, as some websites may flag repeated requests as malicious activity.
 - **Responsibility**: This tool is intended for educational and ethical hacking purposes only. Always adhere to ethical guidelines and legal regulations while using this software.
 
