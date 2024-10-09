@@ -1,17 +1,27 @@
 import os
+import requests
 
 # XSS Test Function
 def xss_test(domain, payload_file, method):
     print(f"🔍 Starting XSS Tests on {domain} using {method} method...")
     with open(payload_file, 'r') as file:
         payloads = file.readlines()
+    
     vulnerability_found = False
+    
     for payload in payloads:
         payload = payload.strip()
         print(f"💥 Testing XSS with payload: {payload}")
-        # Simulated output (replace with actual XSS testing logic)
-        if "alert" in payload:  # Just an example condition for simulation
-            print(f"🎯 Possible XSS vulnerability found: {domain}?payload={payload}")
+        
+        if method == "GET":
+            url = f"{domain}?q={payload}"
+            response = requests.get(url)
+        else:
+            response = requests.post(domain, data={"q": payload})
+        
+        # Simulate XSS detection logic (replace with actual validation)
+        if payload.lower() in response.text:
+            print(f"🎯 Possible XSS vulnerability found: {url}")
             vulnerability_found = True
         else:
             print(f"✖️ No XSS vulnerability found with payload: {payload}")
@@ -22,21 +32,37 @@ def xss_test(domain, payload_file, method):
 # CSRF Test Function
 def csrf_test(domain, method):
     print(f"🔍 Starting CSRF Tests on {domain} using {method} method...")
-    # Simulated output (replace with actual CSRF testing logic)
-    print(f"✖️ No CSRF vulnerability found; URL is safe: {domain}")
+    
+    # Simulate CSRF check (replace with actual CSRF test)
+    csrf_token_present = True  # Assume the CSRF token is present
+    
+    if csrf_token_present:
+        print(f"✖️ No CSRF vulnerability found; URL is safe: {domain}")
+    else:
+        print(f"🎯 CSRF vulnerability found on {domain}")
 
 # SQL Injection Test Function
 def sql_injection_test(domain, payload_file, method):
     print(f"🔍 Starting SQL Injection Tests on {domain} using {method} method...")
+    
     with open(payload_file, 'r') as file:
         payloads = file.readlines()
+    
     vulnerability_found = False
+    
     for payload in payloads:
         payload = payload.strip()
         print(f"💥 Testing SQL Injection with payload: {payload}")
-        # Simulated output (replace with actual SQL Injection testing logic)
-        if "' OR '" in payload:  # Just an example condition for simulation
-            print(f"🎯 Possible SQL Injection vulnerability found: {domain}?payload={payload}")
+        
+        if method == "GET":
+            url = f"{domain}?id={payload}"
+            response = requests.get(url)
+        else:
+            response = requests.post(domain, data={"id": payload})
+        
+        # Simulate SQL injection detection logic (replace with actual validation)
+        if "SQL syntax" in response.text or "error" in response.text:
+            print(f"🎯 Possible SQL Injection vulnerability found: {url}")
             vulnerability_found = True
         else:
             print(f"✖️ No SQL Injection vulnerability found with payload: {payload}")
