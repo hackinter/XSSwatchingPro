@@ -24,7 +24,7 @@ tool_name = r"""
                      XSSwatchingPro v1.0
                 Made by: HACKINTER
                 Founded on: {date}
-                Description: An automatic tool for testing XSS vulnerabilities on specified domains.
+                Description: An automatic tool for testing XSS, CSRF, and SQL Injection vulnerabilities on specified domains.
 """
 
 def display_info():
@@ -74,11 +74,83 @@ def xss_test(domain, payloads, method):
         results.append(result)
         print(result)  # Print each result
 
-    print("\n📊 Analysis complete. Summary of results:")
-    for res in results:
-        print(res)
+    return results
 
-    # Save results to a file with dynamic naming
+def csrf_test(domain, method):
+    print(f"\n{Colors.OKBLUE}🔍 Starting CSRF Tests on {domain}...\n{Colors.ENDC}")
+    results = []
+    csrf_payload = "<img src=x onerror=alert('CSRF Attack!')>"
+    url = f"{domain}"
+
+    try:
+        loading_indicator()  # Show loading indicator while waiting for response
+        
+        if method.upper() == 'POST':
+            response = requests.post(url, data={'payload': csrf_payload})
+        else:  # Default to GET
+            response = requests.get(url)
+
+        time.sleep(2)  # Delay between requests for analysis
+        
+        # Analyze response for vulnerability
+        if csrf_payload in response.text:
+            result = f"{Colors.FAIL}💥 Possible CSRF vulnerability found: {url}{Colors.ENDC}"
+        else:
+            result = f"{Colors.FAIL}❎ No CSRF vulnerability found; URL is safe: {url}{Colors.ENDC}"
+    except requests.exceptions.RequestException:
+        result = f"{Colors.WARNING}⚠️ Error connecting to server; URL is not accessible for testing: {url}{Colors.ENDC}"
+
+    results.append(result)
+    print(result)  # Print each result
+    return results
+
+def sql_injection_test(domain, payloads, method):
+    print(f"\n{Colors.OKBLUE}🔍 Starting SQL Injection Tests on {domain} using {method} method...\n{Colors.ENDC}")
+    results = []
+    for payload in payloads:
+        url = f"{domain}?payload={payload}"  # Modify URL to include payload in query string
+        try:
+            loading_indicator()  # Show loading indicator while waiting for response
+            
+            if method.upper() == 'POST':
+                response = requests.post(url, data={'payload': payload})
+            else:  # Default to GET
+                response = requests.get(url)
+
+            time.sleep(2)  # Delay between requests for analysis
+            
+            # Analyze response for vulnerability
+            if "error" in response.text.lower() or payload in response.text:
+                result = f"{Colors.FAIL}💥 Possible SQL Injection vulnerability found: {url} with payload: {payload}{Colors.ENDC}"
+            else:
+                result = f"{Colors.FAIL}❎ No SQL Injection vulnerability found; URL is safe: {url} with payload: {payload}{Colors.ENDC}"
+        except requests.exceptions.RequestException:
+            result = f"{Colors.WARNING}⚠️ Error connecting to server; URL is not accessible for testing: {url}{Colors.ENDC}"
+        
+        results.append(result)
+        print(result)  # Print each result
+
+    return results
+
+def test_subdomains(target_domain, payloads, method):
+    """Test XSS vulnerabilities on the target domain and its subdomains."""
+    subdomains = [target_domain] + [f"sub{i}.{target_domain}" for i in range(1, 6)]  # Adjust range as needed
+    all_results = []
+
+    for sub in subdomains:
+        print(f"\n{Colors.OKBLUE}🔍 Testing subdomain: {sub}{Colors.ENDC}")
+        xss_results = xss_test(sub, payloads, method)
+        csrf_results = csrf_test(sub, method)
+        sql_results = sql_injection_test(sub, payloads, method)
+
+        all_results.extend(xss_results)
+        all_results.extend(csrf_results)
+        all_results.extend(sql_results)
+
+    return all_results
+
+def save_results(domain, results):
+    """Save results to a file with dynamic naming."""
     base_filename = f"{domain.replace('https://', '').replace('http://', '').replace('/', '')}-result.txt"
     filename = base_filename
     count = 1
@@ -107,8 +179,7 @@ if __name__ == "__main__":
     if not xss_payloads:
         print(f"{Colors.FAIL}⚠️ No payloads available for testing.{Colors.ENDC}")
     else:
-        # Testing against subdomains
-        subdomains = [target_domain, f"sub1.{target_domain}", f"sub2.{target_domain}"]  # Add more subdomains as needed
-        for sub in subdomains:
-            print(f"\n{Colors.OKBLUE}🔍 Testing subdomain: {sub}{Colors.ENDC}")
-            xss_test(sub, xss_payloads, method)
+        # Testing against the target domain and its subdomains
+        all_results = test_subdomains(target_domain, xss_payloads, method)
+        # Save results
+        save_results(target_domain, all_results)
