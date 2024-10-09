@@ -1,105 +1,112 @@
 ```markdown
-# XSSWatchdog Setup Utility
+## Warning
 
-XSSWatchdog is a utility designed to help you set up Nginx configurations and manage settings for an XSS monitoring system. This utility simplifies the process of configuring your server to handle XSS payloads and ensures that all necessary components are in place.
+- **Security**: Be cautious when testing websites that you do not own or have explicit permission to test. Unauthorized testing can be considered illegal and may lead to severe consequences.
+- **Payloads**: The effectiveness of the tool depends on the payloads used. Ensure that you are using relevant and updated payloads to maximize the chances of detecting vulnerabilities.
+- **Network Traffic**: Monitor your network traffic when using this tool, as some websites may flag repeated requests as malicious activity.
+- **Responsibility**: This tool is intended for educational and ethical hacking purposes only. Always adhere to ethical guidelines and legal regulations while using this software.
+```
+
+### সম্পূর্ণ `README.md` উদাহরণ
+
+নিচে সম্পূর্ণ `README.md` ফাইলের উদাহরণ সহ সতর্কতার অংশ যুক্ত করা হয়েছে:
+
+```markdown
+# XSSwatchingPro
+
+XSSwatchingPro is an automated tool for testing XSS (Cross-Site Scripting) vulnerabilities on specified domains. It allows users to check the security of web applications against common XSS attack vectors using customizable payloads.
 
 ## Features
 
-- Generate Nginx configuration for handling HTTP to HTTPS redirection.
-- Create a YAML configuration file for managing application settings.
-- Automatically generate a secure cookie secret for your application.
-- Set up logging for access and errors to help monitor XSS attempts.
+- Load custom payloads from a specified file.
+- Supports both GET and POST HTTP methods for testing.
+- Displays real-time analysis of potential XSS vulnerabilities.
+- Saves test results to a file named according to the domain tested.
+- User-friendly color-coded output in the terminal.
 
 ## Requirements
 
-- Python 2.7 or higher
-- Nginx
-- Postgres
-- Mailgun account for email notifications
+- Python 3.x
+- `requests` library (install using `pip install requests`)
 
 ## Installation
 
-1. Clone this repository:
+1. Clone the repository:
 
    ```bash
-   git clone https://github.com/hackinter/XSSWatchdog.git
-   cd XSSWatchdog
+   git clone https://github.com/yourusername/XSSwatchingPro.git
+   cd XSSwatchingPro
    ```
 
-2. Install the required Python packages:
+2. Install the required dependencies:
 
    ```bash
-   pip install pyyaml
-   ```
-
-3. Make the setup script executable:
-
-   ```bash
-   chmod +x setup.py
+   pip install requests
    ```
 
 ## Usage
 
-1. Run the setup script:
+1. Run the script:
 
    ```bash
-   ./setup.py
+   python xsswatchingpro.py
    ```
 
-2. Follow the prompts to enter your domain, Mailgun API key, Postgres credentials, and other settings.
+2. Input the following when prompted:
 
-3. After completing the setup, copy the generated Nginx configuration file to the appropriate directory:
+   - **Target Domain**: Enter the domain you want to test (e.g., `https://example.com`).
+   - **Payload File Path**: Provide the path to your payload file (e.g., `/path/to/payloads.txt`).
+   - **HTTP Method**: Choose either `GET` or `POST`.
 
-   ```bash
-   sudo cp default /etc/nginx/sites-enabled/default
-   ```
+3. Review the results displayed in the terminal. If vulnerabilities are found, they will be highlighted with appropriate emojis.
 
-4. Ensure that your wildcard SSL certificate and key are placed in `/etc/nginx/ssl/`.
+4. The results will be saved to a file named according to the target domain. For example, if the domain is `kali.org`, the results will be saved as `kali-result.txt`. If this file already exists, subsequent results will be saved as `kali-result1.txt`, `kali-result2.txt`, etc.
 
-5. Restart Nginx:
+## Example
 
-   ```bash
-   sudo systemctl restart nginx
-   ```
-
-## Configuration
-
-The utility generates a `config.yaml` file containing the following settings:
-
-```yaml
-email_from: "whatismyname836@gmail.com"
-mailgun_api_key: "YOUR_MAILGUN_API_KEY"
-mailgun_sending_domain: "YOUR_MAILGUN_DOMAIN"
-domain: "YOUR_DOMAIN"
-abuse_email: "whatismyname836@gmail.com"
-cookie_secret: "GENERATED_COOKIE_SECRET"
-postgres_user: "YOUR_POSTGRES_USERNAME"
-postgres_password: "YOUR_POSTGRES_PASSWORD"
-postgres_db: "YOUR_POSTGRES_DB"
+```bash
+🔗 Enter the target domain (e.g., https://example.com): https://kali.org
+📁 Enter the path to the payload file: /path/to/payloads.txt
+📜 Choose the HTTP method (GET/POST): GET
 ```
 
-### Nginx Configuration
+### Sample Output
 
-The generated Nginx configuration file (`default`) includes:
+- **Vulnerability Found**:
+  ```
+  💥 Possible XSS vulnerability found: https://kali.org?payload=<script>alert('xss')</script> with payload: <script>alert('xss')</script>
+  ```
 
-- Redirection from HTTP to HTTPS
-- API proxy settings
-- Logging for access and errors
+- **No Vulnerability Found**:
+  ```
+  ❎ No vulnerability found; URL is safe: https://kali.org?payload=<script>console.log('test')</script> with payload: <script>console.log('test')</script>
+  ```
 
-## Troubleshooting
+- **Connection Error**:
+  ```
+  ⚠️ Error connecting to server; URL is not accessible for testing: https://kali.org?payload=<script>alert('fail')</script>
+  ```
 
-- Ensure Nginx is installed and running properly.
-- Check that the SSL certificate and key are correctly placed in the specified directory.
-- Review the logs for any errors or issues in the configuration.
+- **Results Saved**:
+  ```
+  ✅ Results saved to kali-result.txt
+  ```
+
+## Warning
+
+- **Security**: Be cautious when testing websites that you do not own or have explicit permission to test. Unauthorized testing can be considered illegal and may lead to severe consequences.
+- **Payloads**: The effectiveness of the tool depends on the payloads used. Ensure that you are using relevant and updated payloads to maximize the chances of detecting vulnerabilities.
+- **Network Traffic**: Monitor your network traffic when using this tool, as some websites may flag repeated requests as malicious activity.
+- **Responsibility**: This tool is intended for educational and ethical hacking purposes only. Always adhere to ethical guidelines and legal regulations while using this software.
+
+## Contributing
+
+Contributions are welcome! Please fork the repository and submit a pull request.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ## Author
 
-- (HACKINTER)
-```
-
-### Customization
-Feel free to update any sections, especially the installation instructions, usage, and troubleshooting parts, to fit the specific details and requirements of your project.
+**HACKINTER**
