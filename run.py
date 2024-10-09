@@ -1,130 +1,116 @@
-import os
 import requests
+import datetime
+import time
+import os
+import urllib.parse
 
-# XSS Test Function
-def xss_test(domain, payload_file, method):
-    print(f"🔍 Starting XSS Tests on {domain} using {method} method...")
-    with open(payload_file, 'r') as file:
-        payloads = file.readlines()
-    
-    vulnerability_found = False
-    
+# ANSI color codes for output
+class Colors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+# ASCII Art for the Tool Name
+tool_name = r"""
+ _  _  ____  ____  _  _   __  ____  ___  _  _  __  __ _   ___  ____  ____   __  
+( \/ )/ ___)/ ___)/ )( \ / _\(_  _)/ __)/ )( \(  )(  ( \ / __)(  _ \(  _ \ /  \ 
+ )  ( \___ \\___ \\ /\ //    \ )( ( (__ ) __ ( )( /    /( (_ \ ) __/ )   /(  O )
+(_/\_)(____/(____/(_/\_)\_/\_/(__) \___)\_)(_/(__)\_)__) \___/(__)  (__\_) \__/ 
+
+                     XSSwatchingPro v1.0
+                Made by: HACKINTER
+                Founded on: {date}
+                Description: An automatic tool for testing XSS vulnerabilities on specified domains.
+"""
+
+def display_info():
+    print(tool_name.format(date=datetime.datetime.now().strftime('%Y-%m-%d')))
+    print("=" * 75)
+
+def load_payloads(filepath):
+    """Load payloads from a specified file."""
+    if not os.path.isfile(filepath):
+        print(f"{Colors.FAIL}🚨 Payloads file not found: {filepath}{Colors.ENDC}")
+        return []
+    with open(filepath, 'r') as file:
+        payloads = [line.strip() for line in file if line.strip()]  # Remove empty lines
+    print(f"{Colors.OKGREEN}✅ Loaded {len(payloads)} payloads from {filepath}{Colors.ENDC}")
+    return payloads
+
+def loading_indicator():
+    """Display a loading indicator."""
+    for _ in range(3):
+        print(f"{Colors.WARNING}🔄 Loading{'.' * _}{Colors.ENDC}", end='\r')
+        time.sleep(0.5)
+    print(" " * 20, end='\r')  # Clear the loading line
+
+def xss_test(domain, payloads, method):
+    print(f"\n{Colors.OKBLUE}🔍 Starting XSS Tests on {domain} using {method} method...\n{Colors.ENDC}")
+    results = []
     for payload in payloads:
-        payload = payload.strip()
-        print(f"💥 Testing XSS with payload: {payload}")
+        encoded_payload = urllib.parse.quote(payload)  # Encode the payload to ensure it's properly sent
+        url = f"{domain}?payload={encoded_payload}"  # Modify URL to include payload in query string
+        try:
+            loading_indicator()  # Show loading indicator while waiting for response
+            
+            if method.upper() == 'POST':
+                response = requests.post(domain, data={'payload': payload})
+            else:  # Default to GET
+                response = requests.get(url)
+
+            time.sleep(2)  # Delay between requests for analysis
+            
+            # Analyze response for vulnerability
+            if payload in response.text:
+                result = f"{Colors.FAIL}💥 Possible XSS vulnerability found: {url} with payload: {payload}{Colors.ENDC}"
+            else:
+                result = f"{Colors.OKGREEN}✅ No vulnerability found; URL is safe: {url} with payload: {payload}{Colors.ENDC}"
+        except requests.exceptions.RequestException as e:
+            result = f"{Colors.WARNING}⚠️ Error connecting to server: {e}; URL: {url}{Colors.ENDC}"
         
-        if method == "GET":
-            url = f"{domain}?q={payload}"
-            response = requests.get(url)
-        else:
-            response = requests.post(domain, data={"q": payload})
+        results.append(result)
+        print(result)  # Print each result
+
+    print("\n📊 Analysis complete. Summary of results:")
+    for res in results:
+        print(res)
+
+    # Save results to a file with dynamic naming
+    base_filename = f"{domain.replace('https://', '').replace('http://', '').replace('/', '')}-result.txt"
+    filename = base_filename
+    count = 1
+    while os.path.isfile(filename):
+        filename = f"{base_filename[:-4]}_{count}.txt"
+        count += 1
         
-        # Simulate XSS detection logic (replace with actual validation)
-        if payload.lower() in response.text:
-            print(f"🎯 Possible XSS vulnerability found: {url}")
-            vulnerability_found = True
-        else:
-            print(f"✖️ No XSS vulnerability found with payload: {payload}")
-    
-    if not vulnerability_found:
-        print(f"✖️ No XSS vulnerabilities found for {domain}")
+    with open(filename, 'w') as result_file:
+        result_file.write("\n".join(results))
+        print(f"{Colors.OKGREEN}✅ Results saved to {filename}{Colors.ENDC}")
 
-# CSRF Test Function
-def csrf_test(domain, method):
-    print(f"🔍 Starting CSRF Tests on {domain} using {method} method...")
-    
-    # Simulate CSRF check (replace with actual CSRF test)
-    csrf_token_present = True  # Assume the CSRF token is present
-    
-    if csrf_token_present:
-        print(f"✖️ No CSRF vulnerability found; URL is safe: {domain}")
-    else:
-        print(f"🎯 CSRF vulnerability found on {domain}")
-
-# SQL Injection Test Function
-def sql_injection_test(domain, payload_file, method):
-    print(f"🔍 Starting SQL Injection Tests on {domain} using {method} method...")
-    
-    with open(payload_file, 'r') as file:
-        payloads = file.readlines()
-    
-    vulnerability_found = False
-    
-    for payload in payloads:
-        payload = payload.strip()
-        print(f"💥 Testing SQL Injection with payload: {payload}")
-        
-        if method == "GET":
-            url = f"{domain}?id={payload}"
-            response = requests.get(url)
-        else:
-            response = requests.post(domain, data={"id": payload})
-        
-        # Simulate SQL injection detection logic (replace with actual validation)
-        if "SQL syntax" in response.text or "error" in response.text:
-            print(f"🎯 Possible SQL Injection vulnerability found: {url}")
-            vulnerability_found = True
-        else:
-            print(f"✖️ No SQL Injection vulnerability found with payload: {payload}")
-    
-    if not vulnerability_found:
-        print(f"✖️ No SQL Injection vulnerabilities found for {domain}")
-
-# Main function
-def main():
-    print(" _  _  ____  ____  _  _   __  ____  ___  _  _  __  __ _   ___  ____  ____   __  ")
-    print("( \\/ )/ ___)/ ___)/ )( \\ / _\\(_  _)/ __)/ )( \\(  )(  ( \\ / __)(  _ \\(  _ \\ /  \\ ")
-    print(" )  ( \\___ \\\\___ \\\\ /\\ //    \\ )( ( (__ ) __ ( )( /    /( (_ \\ ) __/ )   /(  O )")
-    print("(_/\\_)(____/(____/(_/\\_)\\_/\\_/(__) \\___)\\_)(_/(__)\\_)__) \\___/(__)  (__\\_) \\__/ ")
-    print("                      Vulnerability Testing Tool v1.0")
-    print("                Made by: HACKINTER")
-    print("                Founded on: 2024-10-09")
-    print("=========================================================================")
-
-    # Test type selection
-    print("\nPlease select the type of test you want to perform:")
-    print("1. XSS Test")
-    print("2. CSRF Test")
-    print("3. SQL Injection Test")
-    
-    test_choice = input("Enter the number of your choice (1/2/3): ").strip()
-    
-    if test_choice not in ["1", "2", "3"]:
-        print("❌ Invalid choice! Exiting.")
-        return
-    
-    # Get domain input
-    domain = input("\n🔗 Enter the target domain (e.g., https://example.com): ").strip()
-
-    # Get HTTP method (GET/POST)
-    method = input("📜 Choose the HTTP method (GET/POST): ").strip().upper()
-    if method not in ["GET", "POST"]:
-        print("⚠️ Invalid method selected. Defaulting to GET.")
-        method = "GET"
-
-    # Run the selected test
-    if test_choice == "1":
-        # XSS Test
-        payload_file = input("📁 Enter the path to the XSS payload file: ").strip()
-        if os.path.exists(payload_file):
-            xss_test(domain, payload_file, method)
-        else:
-            print("❌ Payload file not found!")
-    elif test_choice == "2":
-        # CSRF Test (No payload file needed)
-        csrf_test(domain, method)
-    elif test_choice == "3":
-        # SQL Injection Test
-        payload_file = input("📁 Enter the path to the SQL Injection payload file: ").strip()
-        if os.path.exists(payload_file):
-            sql_injection_test(domain, payload_file, method)
-        else:
-            print("❌ Payload file not found!")
-    
-    # Save results
-    result_file = f"{domain.replace('https://', '').replace('http://', '').replace('/', '')}-result.txt"
-    print(f"✅ Results saved to {result_file}")
-
-# Run the main function
 if __name__ == "__main__":
-    main()
+    display_info()
+    target_domain = input(f"{Colors.OKBLUE}🔗 Enter the target domain (e.g., https://example.com): {Colors.ENDC}")
+    
+    # User specifies file path
+    payload_file_path = input(f"{Colors.OKBLUE}📁 Enter the path to the payload file: {Colors.ENDC}")
+    
+    # Method selection
+    method = input(f"{Colors.OKBLUE}📜 Choose the HTTP method (GET/POST): {Colors.ENDC}").strip().upper()
+    if method not in ['GET', 'POST']:
+        print(f"{Colors.FAIL}⚠️ Invalid method selected. Defaulting to GET.{Colors.ENDC}")
+        method = 'GET'
+
+    xss_payloads = load_payloads(payload_file_path)
+    if not xss_payloads:
+        print(f"{Colors.FAIL}⚠️ No payloads available for testing.{Colors.ENDC}")
+    else:
+        # Testing against subdomains
+        subdomains = [target_domain, f"sub1.{target_domain}", f"sub2.{target_domain}"]  # Add more subdomains as needed
+        for sub in subdomains:
+            print(f"\n{Colors.OKBLUE}🔍 Testing subdomain: {sub}{Colors.ENDC}")
+            xss_test(sub, xss_payloads, method)
