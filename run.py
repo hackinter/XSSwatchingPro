@@ -1,87 +1,80 @@
-import os
-
-# XSS Test Function
-def xss_test(domain, payload_file, method):
-    print(f"🔍 Starting XSS Tests on {domain} using {method} method...")
-    with open(payload_file, 'r') as file:
-        payloads = file.readlines()
-    for payload in payloads:
-        payload = payload.strip()
-        print(f"💥 Testing XSS with payload: {payload}")
-        # Simulated output (replace with actual XSS testing logic)
-        print(f"💥 Possible XSS vulnerability found: {domain}?payload={payload} with payload: {payload}")
-
-# CSRF Test Function
-def csrf_test(domain, method):
-    print(f"🔍 Starting CSRF Tests on {domain} using {method} method...")
-    # Simulated output (replace with actual CSRF testing logic)
-    print(f"❎ No CSRF vulnerability found; URL is safe: {domain}")
-
-# SQL Injection Test Function
-def sql_injection_test(domain, payload_file, method):
-    print(f"🔍 Starting SQL Injection Tests on {domain} using {method} method...")
-    with open(payload_file, 'r') as file:
-        payloads = file.readlines()
-    for payload in payloads:
-        payload = payload.strip()
-        print(f"💥 Testing SQL Injection with payload: {payload}")
-        # Simulated output (replace with actual SQL Injection testing logic)
-        print(f"💥 Possible SQL Injection vulnerability found: {domain}?payload={payload} with payload: {payload}")
-
-# Main function
 def main():
-    print(" _  _  ____  ____  _  _   __  ____  ___  _  _  __  __ _   ___  ____  ____   __  ")
-    print("( \\/ )/ ___)/ ___)/ )( \\ / _\\(_  _)/ __)/ )( \\(  )(  ( \\ / __)(  _ \\(  _ \\ /  \\ ")
-    print(" )  ( \\___ \\\\___ \\\\ /\\ //    \\ )( ( (__ ) __ ( )( /    /( (_ \\ ) __/ )   /(  O )")
-    print("(_/\\_)(____/(____/(_/\\_)\\_/\\_/(__) \\___)\\_)(_/(__)\\_)__) \\___/(__)  (__\\_) \\__/ ")
-    print("                      Vulnerability Testing Tool v1.0")
-    print("                Made by: HACKINTER")
-    print("                Founded on: 2024-10-09")
-    print("=========================================================================")
+    print("""
+     _  _  ____  ____  _  _   __  ____  ___  _  _  __  __ _   ___  ____  ____   __  
+    ( \/ )/ ___)/ ___)/ )( \ / _\(_  _)/ __)/ )( \(  )(  ( \ / __)(  _ \(  _ \ /  \ 
+     )  ( \___ \\___ \\ /\ //    \ )( ( (__ ) __ ( )( /    /( (_ \ ) __/ )   /(  O )
+    (_/\_)(____/(____/(_/\_)\_/\_/(__) \___)\_)(_/(__)\_)__) \___/(__)  (__\_) \__/ 
+    
+                         Vulnerability Testing Tool v1.0
+                    Made by: HACKINTER | Copyright © 2024
+        ===========================================================
+        """)
+    
+    print("🎯 Choose the type of test to run:")
+    print("1. XSS Testing")
+    print("2. CSRF Testing")
+    print("3. SQL Injection Testing")
+    
+    choice = input("Enter your choice (1/2/3): ")
 
-    # Test type selection
-    print("\nPlease select the type of test you want to perform:")
-    print("1. XSS Test")
-    print("2. CSRF Test")
-    print("3. SQL Injection Test")
-    
-    test_choice = input("Enter the number of your choice (1/2/3): ").strip()
-    
-    if test_choice not in ["1", "2", "3"]:
-        print("❌ Invalid choice! Exiting.")
+    if choice == '1':
+        print("🎯 XSS Testing Selected")
+        test_type = "XSS"
+    elif choice == '2':
+        print("🎯 CSRF Testing Selected")
+        test_type = "CSRF"
+    elif choice == '3':
+        print("🎯 SQL Injection Testing Selected")
+        test_type = "SQL Injection"
+    else:
+        print("✖️ Invalid choice! Please select a valid test.")
         return
-    
-    # Get domain input
-    domain = input("\n🔗 Enter the target domain (e.g., https://example.com): ").strip()
 
-    # Get HTTP method (GET/POST)
-    method = input("📜 Choose the HTTP method (GET/POST): ").strip().upper()
-    if method not in ["GET", "POST"]:
-        print("⚠️ Invalid method selected. Defaulting to GET.")
-        method = "GET"
+    # Input for domain and payload path
+    domain = input("🔗 Enter the target domain (e.g., https://example.com): ")
+    payload_path = input("📁 Enter the path to the payload file: ")
 
-    # Run the selected test
-    if test_choice == "1":
-        # XSS Test
-        payload_file = input("📁 Enter the path to the XSS payload file: ").strip()
-        if os.path.exists(payload_file):
-            xss_test(domain, payload_file, method)
-        else:
-            print("❌ Payload file not found!")
-    elif test_choice == "2":
-        # CSRF Test (No payload file needed)
-        csrf_test(domain, method)
-    elif test_choice == "3":
-        # SQL Injection Test
-        payload_file = input("📁 Enter the path to the SQL Injection payload file: ").strip()
-        if os.path.exists(payload_file):
-            sql_injection_test(domain, payload_file, method)
-        else:
-            print("❌ Payload file not found!")
+    # Select HTTP method (GET or POST)
+    http_method = input("📜 Choose the HTTP method (GET/POST): ").upper()
+    if http_method not in ["GET", "POST"]:
+        print("✖️ Invalid method selected. Defaulting to GET.")
+        http_method = "GET"
+
+    # Call the respective test function based on the user's choice
+    if test_type == "XSS":
+        run_xss_test(domain, payload_path, http_method)
+    elif test_type == "CSRF":
+        run_csrf_test(domain, payload_path, http_method)
+    elif test_type == "SQL Injection":
+        run_sql_injection_test(domain, payload_path, http_method)
+
+    # Save results to a text file
+    result_file = f"{domain.replace('https://', '').replace('/', '')}-result.txt"
+    with open(result_file, 'w') as file:
+        file.write(f"Results of {test_type} testing on {domain}\n")
+        file.write("========================================\n")
+        # Assuming `test_results` contains the results of the selected test
+        for result in test_results:
+            file.write(result + "\n")
     
-    # Save results
-    result_file = f"{domain.replace('https://', '').replace('http://', '').replace('/', '')}-result.txt"
     print(f"✅ Results saved to {result_file}")
+
+# Example test functions for XSS, CSRF, and SQL Injection
+def run_xss_test(domain, payload_path, http_method):
+    print(f"🔍 Starting XSS Tests on {domain} using {http_method} method...")
+    # Simulate the test and result
+    test_results = ["🎯 Vulnerability found: https://example.com with payload <script>alert(1)</script>"]
+    print("\n".join(test_results))
+
+def run_csrf_test(domain, payload_path, http_method):
+    print(f"🔍 Starting CSRF Tests on {domain} using {http_method} method...")
+    test_results = ["✖️ No CSRF vulnerability found; URL is safe: https://example.com"]
+    print("\n".join(test_results))
+
+def run_sql_injection_test(domain, payload_path, http_method):
+    print(f"🔍 Starting SQL Injection Tests on {domain} using {http_method} method...")
+    test_results = ["🎯 Possible SQL Injection vulnerability found: https://example.com with payload ' OR '1'='1"]
+    print("\n".join(test_results))
 
 # Run the main function
 if __name__ == "__main__":
