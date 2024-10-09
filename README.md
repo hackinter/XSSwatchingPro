@@ -36,7 +36,7 @@ XSSwatchingPro is an automated tool for testing XSS (Cross-Site Scripting) vulne
 1. Run the script:
 
    ```bash
-   python xsswatchingpro.py
+   python run.py
    ```
 
 2. Input the following when prompted:
