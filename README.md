@@ -21,7 +21,7 @@ XSSwatchingPro is an automated tool for testing XSS (Cross-Site Scripting) vulne
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/XSSwatchingPro.git
+   git clone https://github.com/hackinter/XSSwatchingPro.git
    cd XSSwatchingPro
    ```
 
