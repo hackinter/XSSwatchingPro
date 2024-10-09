@@ -1,17 +1,4 @@
 ```markdown
-## Warning
-
-- **Security**: Be cautious when testing websites that you do not own or have explicit permission to test. Unauthorized testing can be considered illegal and may lead to severe consequences.
-- **Payloads**: The tool's effectiveness depends on the payloads used. Ensure that you are using relevant and updated payloads to maximize the chances of detecting vulnerabilities.
-- **Network Traffic**: Monitor your network traffic when using this tool, as some websites may flag repeated requests as malicious activity.
-- **Responsibility**: This tool is intended for educational and ethical hacking purposes only. Always adhere to ethical guidelines and legal regulations while using this software.
-```
-
-### সম্পূর্ণ `README.md` উদাহরণ
-
-নিচে সম্পূর্ণ `README.md` ফাইলের উদাহরণ সহ সতর্কতার অংশ যুক্ত করা হয়েছে:
-
-```markdown
 # XSSwatchingPro
 
 XSSwatchingPro is an automated tool for testing XSS (Cross-Site Scripting) vulnerabilities on specified domains. It allows users to check the security of web applications against common XSS attack vectors using customizable payloads.
