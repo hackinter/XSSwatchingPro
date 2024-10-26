@@ -1,4 +1,3 @@
-```markdown
 # XSSwatchingPro
 
 XSSwatchingPro is an automated tool for testing XSS (Cross-Site Scripting) vulnerabilities on specified domains. It allows users to check the security of web applications against common XSS attack vectors using customizable payloads.
