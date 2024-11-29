@@ -1,30 +1,30 @@
-# XSSwatchingPro
+# LOXIA
 
-XSSwatchingPro is an automated tool for testing XSS (Cross-Site Scripting) vulnerabilities on specified domains. It allows users to check the security of web applications against common XSS attack vectors using customizable payloads.
+**XSSwatchingPro** is an automated tool designed for testing XSS (Cross-Site Scripting) vulnerabilities on specified domains. This tool helps you check the security of web applications against common XSS attack vectors by utilizing customizable payloads.
 
 ## Features
 
-- Load custom payloads from a specified file.
-- Supports both GET and POST HTTP methods for testing.
-- Displays real-time analysis of potential XSS vulnerabilities.
-- Saves test results to a file named according to the domain tested.
-- User-friendly color-coded output in the terminal.
+- 📝 **Custom Payloads**: Load payloads from a specified file for testing.
+- 🌐 **HTTP Method Support**: Supports both `GET` and `POST` HTTP methods for testing.
+- 📊 **Real-time Analysis**: Displays live analysis of potential XSS vulnerabilities in the terminal.
+- 💾 **Results Saving**: Automatically saves test results to a file named according to the domain tested, ensuring you can revisit your findings.
+- 🎨 **Color-Coded Output**: User-friendly terminal output with color codes for easier interpretation of test results.
 
 ## Requirements
 
-- Python 3.x
-- `requests` library (install using `pip install requests`)
+- 🐍 **Python 3.x**
+- 📦 **`requests` library** (install with `pip install requests`)
 
 ## Installation
 
-1. Clone the repository:
+1. **Clone the Repository**:
 
    ```bash
-   git clone https://github.com/hackinter/XSSwatchingPro.git
-   cd XSSwatchingPro
+   git clone https://github.com/hackinter/LOXIA.git
+   cd LOXIA
    ```
 
-2. Install the required dependencies:
+2. **Install the Dependencies**:
 
    ```bash
    pip install requests
@@ -32,69 +32,80 @@ XSSwatchingPro is an automated tool for testing XSS (Cross-Site Scripting) vulne
 
 ## Usage
 
-1. Run the script:
+1. **Run the Script**:
+
+   Execute the script in the terminal:
 
    ```bash
-   python run.py
+   python loxia.py
    ```
 
-2. Input the following when prompted:
+2. **Input the Following Information**:
 
-   - **Target Domain**: Enter the domain you want to test (e.g., `https://example.com`).
-   - **Payload File Path**: Provide the path to your payload file (e.g., `/path/to/payloads.txt`).
-   - **HTTP Method**: Choose either `GET` or `POST`.
+   - 🔗 **Target Domain**: Enter the domain you want to test (e.g., `https://example.com/search.jsp?query=`).
+   - 📁 **Payload File Path**: Provide the full path to your payload file (e.g., `/path/to/payloads.txt`).
+   - 📜 **HTTP Method**: Choose either `GET` or `POST` based on your test requirements.
 
-3. Review the results displayed in the terminal. If vulnerabilities are found, they will be highlighted with appropriate emojis.
+3. **Review the Results**: After running the tool, results will be displayed in the terminal with color-coded outputs:
+   - ✅ **Success**: Safe URLs will be highlighted.
+   - 💥 **Vulnerabilities**: Detected XSS vulnerabilities will be marked with the appropriate emoji.
+   - ⚠️ **Connection Errors**: Any issues connecting to the server will also be flagged.
 
-4. The results will be saved to a file named according to the target domain. For example, if the domain is `kali.org`, the results will be saved as `kali-result.txt`. If this file already exists, subsequent results will be saved as `kali-result1.txt`, `kali-result2.txt`, etc.
+4. **Saving Results**: After the test, you can save the results to a file:
+   - For example, if the target domain is `kali.org`, the result file will be named `kali-result.txt`.
+   - If a file with that name already exists, the tool will create additional files like `kali-result1.txt`, `kali-result2.txt`, etc.
 
 ## Example
 
 ```bash
-🔗 Enter the target domain (e.g., https://example.com): https://example.com
+🔗 Enter the target domain (e.g., https://example.com): https://example.com/search.jsp?query=
 📁 Enter the path to the payload file: /path/to/payloads.txt
 📜 Choose the HTTP method (GET/POST): GET
 ```
 
 ### Sample Output
 
-- **Vulnerability Found**:
+- 💥 **Vulnerability Found**:
   ```
   💥 Possible XSS vulnerability found: https://example.com?payload=<script>alert('xss')</script> with payload: <script>alert('xss')</script>
   ```
 
-- **No Vulnerability Found**:
+- ✅ **No Vulnerability Found**:
   ```
   ❎ No vulnerability found; URL is safe: https://example.com?payload=<script>console.log('test')</script> with payload: <script>console.log('test')</script>
   ```
 
-- **Connection Error**:
+- ⚠️ **Connection Error**:
   ```
   ⚠️ Error connecting to server; URL is not accessible for testing: https://example.com?payload=<script>alert('fail')</script>
   ```
 
-- **Results Saved**:
+- 💾 **Results Saved**:
   ```
   ✅ Results saved to example-com-result.txt
   ```
 
 ## Warning
 
-- **Security**: Be cautious when testing websites that you do not own or have explicit permission to test. Unauthorized testing can be considered illegal and may lead to severe consequences.
-- **Payloads**: The tool's effectiveness depends on the payloads used. Ensure that you are using relevant and updated payloads to maximize the chances of detecting vulnerabilities.
-- **Network Traffic**: Monitor your network traffic when using this tool, as some websites may flag repeated requests as malicious activity.
-- **Responsibility**: This tool is intended for educational and ethical hacking purposes only. Always adhere to ethical guidelines and legal regulations while using this software.
+- ⚠️ **Security**: Always ensure you have explicit permission before testing any website. Unauthorized testing may be illegal and could result in serious consequences.
+- 🛡️ **Payloads**: The effectiveness of the tool relies on using relevant and up-to-date payloads. Ensure you have the latest payloads for accurate testing.
+- 📶 **Network Traffic**: Repeated requests to a website can be flagged as malicious by servers. Monitor your network traffic to avoid being blocked.
+- 🌐 **Ethical Use**: This tool is designed for educational and ethical hacking purposes only. Always comply with ethical guidelines and legal regulations.
 
 ## Contributing
 
-Contributions are welcome! Please fork the repository and submit a pull request.
+We welcome contributions! To contribute:
+1. 🍴 Fork the repository.
+2. 🌱 Create a new branch.
+3. ✨ Implement your feature or fix.
+4. 📤 Submit a pull request.
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for more information.
 
 ## Author
 
-**HACKINTER** 
-![HACKINTER Logo](path/to/your/logo.svg)  <!--HELLO -->
+**HACKINTER**  
+![HACKINTER Logo](path/to/your/logo.svg)  
 
