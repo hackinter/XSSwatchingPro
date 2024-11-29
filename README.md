@@ -107,5 +107,8 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 ## Author
 
 **HACKINTER**  
-![HACKINTER Logo](path/to/your/logo.svg)  
+<div align="center">
+  <img src="https://github.com/hackinter/Template/blob/main/image.jpg" alt="Logo" />
+</div>
+
 
