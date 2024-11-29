@@ -1,6 +1,14 @@
 # LOXIA
+<div align="center">
+  <a href="https://github.com/hackinter/Archer/releases">
+    <img src="https://img.shields.io/badge/Version-2.0.-blue.svg" alt="Version">
+  </a>
+  <a href="https://github.com/hackinter">
+    <img src="https://img.shields.io/badge/GITHUB-HACKINTER-red.svg" alt="GitHub">
+  </a>
+</div>
 
-**XSSwatchingPro** is an automated tool designed for testing XSS (Cross-Site Scripting) vulnerabilities on specified domains. This tool helps you check the security of web applications against common XSS attack vectors by utilizing customizable payloads.
+**LOXIA** is an automated tool designed for testing XSS (Cross-Site Scripting) vulnerabilities on specified domains. This tool helps you check the security of web applications against common XSS attack vectors by utilizing customizable payloads.
 
 ## Features
 
