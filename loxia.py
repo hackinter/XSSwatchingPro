@@ -1,8 +1,9 @@
+import os
 import requests
 import datetime
 import time
-import os
 import urllib.parse
+import shutil
 
 # ANSI color codes for output
 class Colors:
@@ -15,22 +16,31 @@ class Colors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-# ASCII Art for the Tool Name
-tool_name = r"""
- _  _  ____  ____  _  _   __  ____  ___  _  _  __  __ _   ___  ____  ____   __  
-( \/ )/ ___)/ ___)/ )( \ / _\(_  _)/ __)/ )( \(  )(  ( \ / __)(  _ \(  _ \ /  \ 
- )  ( \___ \\___ \\ /\ //    \ )( ( (__ ) __ ( )( /    /( (_ \ ) __/ )   /(  O )
-(_/\_)(____/(____/(_/\_)\_/\_/(__) \___)\_)(_/(__)\_)__) \___/(__)  (__\_) \__/ 
+# Function to clear terminal screen
+def clear_screen():
+    if os.name == 'posix':
+        os.system('clear')  # For Linux/OS X
+    else:
+        os.system('cls')  # For Windows
 
-                     XSSwatchingPro v1.0
-                Made by: HACKINTER
-                Founded on: {date}
-                Description: An automatic tool for testing XSS vulnerabilities on specified domains.
+# ASCII Art for the Tool Name (Centered)
+tool_name = r"""
+
+██╗      ██████╗ ██╗  ██╗██╗ █████╗ 
+██║     ██╔═══██╗╚██╗██╔╝██║██╔══██╗
+██║     ██║   ██║ ╚███╔╝ ██║███████║
+██║     ██║   ██║ ██╔██╗ ██║██╔══██║
+███████╗╚██████╔╝██╔╝ ██╗██║██║  ██║
+╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═╝╚═╝  ╚═╝
+                        LOXIA__v1.0
+                        Made by:LOXIA@HACKINTER
 """
 
 def display_info():
-    print(tool_name.format(date=datetime.datetime.now().strftime('%Y-%m-%d')))
-    print("=" * 75)
+    terminal_width = shutil.get_terminal_size().columns
+    centered_tool_name = '\n'.join([line.center(terminal_width) for line in tool_name.splitlines()])
+    print(centered_tool_name)
+    print("=" * terminal_width)
 
 def load_payloads(filepath):
     """Load payloads from a specified file."""
@@ -53,8 +63,14 @@ def xss_test(domain, payloads, method):
     print(f"\n{Colors.OKBLUE}🔍 Starting XSS Tests on {domain} using {method} method...\n{Colors.ENDC}")
     results = []
     for payload in payloads:
-        encoded_payload = urllib.parse.quote(payload)  # Encode the payload to ensure it's properly sent
-        url = f"{domain}?payload={encoded_payload}"  # Modify URL to include payload in query string
+        encoded_payload = urllib.parse.quote(payload)
+        
+        # Check if the URL already contains '?payload=' to avoid appending it again
+        if "?payload=" in domain:
+            url = f"{domain}&payload={encoded_payload}"  # Append with '&' if '?payload=' is already present
+        else:
+            url = f"{domain}?payload={encoded_payload}"  # Add '?payload=' if it's the first one
+        
         try:
             loading_indicator()  # Show loading indicator while waiting for response
             
@@ -69,7 +85,7 @@ def xss_test(domain, payloads, method):
             if payload in response.text:
                 result = f"{Colors.FAIL}💥 Possible XSS vulnerability found: {url} with payload: {payload}{Colors.ENDC}"
             else:
-                result = f"{Colors.OKGREEN}✅ No vulnerability found; URL is safe: {url} with payload: {payload}{Colors.ENDC}"
+                result = f"{Colors.OKGREEN}❌No vulnerability found; URL is safe: {url} with payload: {payload}{Colors.ENDC}"
         except requests.exceptions.RequestException as e:
             result = f"{Colors.WARNING}⚠️ Error connecting to server: {e}; URL: {url}{Colors.ENDC}"
         
@@ -88,12 +104,18 @@ def xss_test(domain, payloads, method):
         filename = f"{base_filename[:-4]}_{count}.txt"
         count += 1
         
-    with open(filename, 'w') as result_file:
-        result_file.write("\n".join(results))
-        print(f"{Colors.OKGREEN}✅ Results saved to {filename}{Colors.ENDC}")
+    save_option = input(f"{Colors.OKBLUE}💾 Do you want to save the results to a file? (Y/N): {Colors.ENDC}")
+    if save_option.strip().lower() == 'y':
+        with open(filename, 'w') as result_file:
+            result_file.write("\n".join(results))
+            print(f"{Colors.OKGREEN}✅ Results saved to {filename}{Colors.ENDC}")
+    else:
+        print(f"{Colors.WARNING}⚠️ Results not saved.{Colors.ENDC}")
 
 if __name__ == "__main__":
+    clear_screen()  # Clear the terminal before starting the tool
     display_info()
+    
     target_domain = input(f"{Colors.OKBLUE}🔗 Enter the target domain (e.g., https://example.com): {Colors.ENDC}")
     
     # User specifies file path
