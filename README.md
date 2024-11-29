@@ -108,15 +108,19 @@ We welcome contributions! To contribute:
 3. ✨ Implement your feature or fix.
 4. 📤 Submit a pull request.
 
-## License
+## License 📜
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/hackinter/oneclick/blob/main/LICENSE) file for more details.
 
-This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for more information.
+## Contributing 🤝
+We welcome contributions! If you would like to contribute, feel free to fork the repository and submit a pull request. If you encounter any bugs or have suggestions, please open an issue.
 
-## Author
+## Contact 📧
+For any queries or issues, feel free to reach out to us:
 
-**HACKINTER**  
-<div align="center">
-  <img src="https://github.com/hackinter/Template/blob/main/image.jpg" alt="Logo" />
-</div>
+[![Email](https://img.shields.io/badge/HACKINTER-MAIL-red.svg)](mailto:ceh.ec.counselor147@gmail.com)  
+[![Telegram](https://img.shields.io/badge/HACKINTER-T.ME-blue.svg)](https://t.me/chat_with_hackinter_bot)  
+[![Twitter](https://img.shields.io/badge/HACKINTER-TWITTER-black.svg)](https://x.com/_anonix_z)
+
+
 
 
